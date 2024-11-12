@@ -1,8 +1,9 @@
 #!/bin/sh
 pgm="$1"
+pram="$2"
 
 case "$pgm" in
-    zsh)
+    -zsh)
 	    echo "Installing zsh"
 	    sudo apt install -y zsh
 	    if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -15,10 +16,28 @@ case "$pgm" in
 	    source $HOME/.zshrc
 	    echo "Done, excute 'zsh' for a try"
 	;;
-    neovim)
+    -neovim)
 	    sudo apt install -y neovim clangd
+        case "$pram" in
+            --vim)
+                cp ./init.vim ~/.config/
+                ;;
+            --lua)
+            if command -v lua >/dev/null 2>&1; then
+                lua -v
+            else
+                echo "Installing Lua"
+                sudo apt update
+                sudo apt install lua5.4
+            fi
+                cp ./init.lua ~/.config/init.lua
+                git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+                nvim --headless +PackerSync +qa
+                echo "pack.vim config done"
+                ;;
+            esac
 	;;
-    change)
+    -change)
 	    sudo mv /etc/apt/sources.list /etc/apt/sources.list.bak
 	    sudo cat > /etc/apt/sources.list <<EOF
 # 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释
@@ -37,8 +56,13 @@ deb http://security.ubuntu.com/ubuntu/ noble-security main restricted universe m
 # deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-proposed main restricted universe multiverse
 # # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-proposed main restricted universe multiverse
 EOF
-	sudo apt-get update && sudo apt-get upgrade
+	    sudo apt-get update && sudo apt-get upgrade
 	;;
+    -help)
+        echo "Call -zsh for change default shell into zsh with oh-myzsh"
+        echo "Call -neovim --vim/lua for deploying neovim in vim or lua config"
+        echo "Call -change for change apt source to tuna source(ubuntu noble only)"
+    ;;
     *)
-	    echo "Not support yet, exiting"
+	    echo "Not support yet, exiting, call -help for what I can do."
 esac
