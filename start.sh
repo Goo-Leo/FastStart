@@ -13,7 +13,9 @@ case "$pgm" in
 	    chsh -s $(which zsh)
 	    mv $HOME/.zshrc .zshrc_old
 	    cp ./.zshrc $HOME/
-	    source $HOME/.zshrc
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+	    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+        source $HOME/.zshrc
 	    echo "Done, excute 'zsh' for a try"
 	;;
     -neovim)
@@ -65,4 +67,5 @@ EOF
     ;;
     *)
 	    echo "Not support yet, exiting, call -help for what I can do."
+        exit 1
 esac
