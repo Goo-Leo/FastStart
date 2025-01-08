@@ -10,7 +10,7 @@ case "$pgm" in
 		    echo "Installing Oh-My-Zsh..."
 		    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 	    fi
-	    chsh -s $(which zsh)
+	    sudo chsh -s $(which zsh)
 	    mv $HOME/.zshrc .zshrc_old
 	    cp ./.zshrc $HOME/
         git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
@@ -22,7 +22,7 @@ case "$pgm" in
 	    sudo apt install -y neovim clangd
         case "$pram" in
             --vim)
-                cp ./init.vim ~/.config/
+                cp ./init.vim ~/.config/nvim/
                 ;;
             --lua)
             if command -v lua >/dev/null 2>&1; then
@@ -32,7 +32,7 @@ case "$pgm" in
                 sudo apt update
                 sudo apt install lua5.4
             fi
-                cp ./init.lua ~/.config/init.lua
+                cp ./init.lua ~/.config/nvim/init.lua
                 git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
                 nvim --headless +PackerSync +qa
                 echo "pack.vim config done"
